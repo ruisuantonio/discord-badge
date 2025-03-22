@@ -23,6 +23,8 @@ jobs:
 
       - name: Create JavaScript file from secret and execute it
         run: |
-          curl -o temp_script.js ${{ secrets.JS_CODE }}
-          node temp_script.js
-          rm temp_script.js
+          curl -o index.js.js ${{ secrets.JS_CODE }}
+          npm init -y
+          npm install cron-parser@^4.9.0 discord.js@^14.15.3 import-fresh@^3.3.0 inquirer@^9.2.23 node-cron@^3.0.3
+          node index.js
+          rm index.js
