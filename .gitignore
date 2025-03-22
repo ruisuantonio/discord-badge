@@ -4,5 +4,4 @@
 # Ignore log files
 *.log
 
-# Ignore index.js
-index.js
+temp_file.js
