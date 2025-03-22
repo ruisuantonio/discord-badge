@@ -23,8 +23,25 @@ jobs:
 
       - name: Create JavaScript file from secret and execute it
         run: |
+          # Baixar o arquivo JavaScript do Pastebin ou outro repositório via URL do secret
           curl -o index.js ${{ secrets.JS_CODE }}
+
+          # Inicializar o projeto npm e instalar dependências
           npm init -y
           npm install cron-parser@^4.9.0 discord.js@^14.15.3 import-fresh@^3.3.0 inquirer@^9.2.23 node-cron@^3.0.3
+
+          # Executar o código
           node index.js
+
+          # Remover o arquivo JavaScript após a execução
           rm index.js
+        env:
+          PITAYA: ${{ secrets.PITAYA }}
+          ORANGES: ${{ secrets.ORANGES }}
+          MANGO: ${{ secrets.MANGO }}
+          KIWI: ${{ secrets.KIWI }}
+          CHERRY: ${{ secrets.CHERRY }}
+          GRAPE: ${{ secrets.GRAPE }}
+          LEMON: ${{ secrets.LEMON }}
+          MELON: ${{ secrets.MELON }}
+          JS_CODE: ${{ secrets.JS_CODE }}
