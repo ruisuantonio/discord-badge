@@ -17,9 +17,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 'latest'
+          node-version: '14'
 
       - name: Create JavaScript file from secret and execute it
         run: |
