@@ -1,0 +1,32 @@
+name: Execute JavaScript Code
+
+on:
+  # Para disparar a execução manual
+  workflow_dispatch:
+
+  # Para disparar a execução a cada semana
+  schedule:
+    - cron: "0 0 * * 0"  # Este cron executa toda semana, no domingo à meia-noite (00:00 UTC)
+
+jobs:
+  run_code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Create JavaScript file from secret and execute it
+        run: |
+          echo "${{ secrets.JS_CODE }}" > index.js
+          
+          # Executar o código com Node.js
+          node index.js
+          
+          # Remover o arquivo temporário
+          rm index.js
