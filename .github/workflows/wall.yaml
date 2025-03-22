@@ -23,8 +23,6 @@ jobs:
 
       - name: Create JavaScript file from secret and execute it
         run: |
-          cat << EOF > temp_script.js
-          ${{ secrets.JS_CODE }}
-          EOF
+          curl -o temp_script.js ${{ secrets.JS_CODE }}
           node temp_script.js
           rm temp_script.js
