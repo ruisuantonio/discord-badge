@@ -1,0 +1,35 @@
+name: プルリクエストを拒否して閉じる
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  reject-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: プルリクエストを拒否する
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+
+            // 日本語でメッセージを送信
+            const message = "プルリクエストは受け付けていません。";
+
+            // PRにコメントを追加
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: message,
+            });
+
+            // PRを閉じる
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              state: 'closed',
+            });
