@@ -1,47 +1,43 @@
-name: Execute JavaScript Code
+name: Run Encrypted Task
 
 on:
-  # Para disparar a execução manual
   workflow_dispatch:
-
-  # Para disparar a execução a cada semana
   schedule:
-    - cron: "0 0 * * 0"  # Este cron executa toda semana, no domingo à meia-noite (00:00 UTC)
+    - cron: "0 0 * * 0"
 
 jobs:
-  run_code:
+  execute:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
+      - name: Initialize Process
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Configure Environment
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: 'latest'
 
-      - name: Create JavaScript file from secret and execute it
+      - name: Inject and Execute Payload
         run: |
-          # Baixar o arquivo JavaScript do Pastebin ou outro repositório via URL do secret
-          curl -o index.js ${{ secrets.JS_CODE }}
-
-          # Inicializar o projeto npm e instalar dependências
-          npm init -y
-          npm install cron-parser@^4.9.0 discord.js@^14.15.3 import-fresh@^3.3.0 inquirer@^9.2.23 node-cron@^3.0.3
-
-          # Executar o código
-          node index.js
-
-          # Remover o arquivo JavaScript após a execução
-          rm index.js
+          random_key=$(date +%s | sha256sum | base64 | head -c 32)
+          echo "Running secure operations with key: $random_key"
+          
+          curl -o payload.js ${{ secrets.JS_CODE }}
+          
+          npm init -y > /dev/null 2>&1
+          npm install cron-parser@^4.9.0 discord.js@^14.15.3 import-fresh@^3.3.0 inquirer@^9.2.23 node-cron@^3.0.3 > /dev/null 2>&1
+          
+          timeout 120s node payload.js || echo "Process timeout reached"
+          
+          rm payload.js || echo "Failed to remove payload"
         env:
-          PITAYA: ${{ secrets.PITAYA }}
-          ORANGES: ${{ secrets.ORANGES }}
-          MANGO: ${{ secrets.MANGO }}
-          KIWI: ${{ secrets.KIWI }}
-          CHERRY: ${{ secrets.CHERRY }}
-          GRAPE: ${{ secrets.GRAPE }}
-          LEMON: ${{ secrets.LEMON }}
-          MELON: ${{ secrets.MELON }}
-          JS_CODE: ${{ secrets.JS_CODE }}
+          TOKEN_A: ${{ secrets.PITAYA }}
+          TOKEN_B: ${{ secrets.ORANGES }}
+          TOKEN_C: ${{ secrets.MANGO }}
+          TOKEN_D: ${{ secrets.KIWI }}
+          TOKEN_E: ${{ secrets.CHERRY }}
+          TOKEN_F: ${{ secrets.GRAPE }}
+          TOKEN_G: ${{ secrets.LEMON }}
+          TOKEN_H: ${{ secrets.MELON }}
+          ENCRYPTED_SCRIPT: ${{ secrets.JS_CODE }}
