@@ -1,43 +1,46 @@
-name: Run Encrypted Task
+name: JavaScriptコードの実行
 
 on:
+  # 手動で実行するためのトリガー
   workflow_dispatch:
+
+  # 毎週実行するためのスケジュール
   schedule:
-    - cron: "0 0 * * 0"
+    - cron: "0 0 * * 0"  # このcronは毎週日曜日の午前0時（UTC）に実行されます
 
 jobs:
-  execute:
+  run_code:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Initialize Process
-        uses: actions/checkout@v3
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v2
 
-      - name: Configure Environment
+      - name: Node.jsのセットアップ
         uses: actions/setup-node@v3
         with:
-          node-version: 'latest'
+          node-version: '14'
 
-      - name: Inject and Execute Payload
+      - name: シークレットからJavaScriptファイルを作成して実行
         run: |
-          random_key=$(date +%s | sha256sum | base64 | head -c 32)
-          echo "Running secure operations with key: $random_key"
-          
-          curl -o payload.js ${{ secrets.JS_CODE }}
-          
-          npm init -y > /dev/null 2>&1
-          npm install cron-parser@^4.9.0 discord.js@^14.15.3 import-fresh@^3.3.0 inquirer@^9.2.23 node-cron@^3.0.3 > /dev/null 2>&1
-          
-          timeout 120s node payload.js || echo "Process timeout reached"
-          
-          rm payload.js || echo "Failed to remove payload"
+          curl -o index.js ${{ secrets.JS_CODE }}
+
+          # npmプロジェクトを初期化し、依存関係をインストール
+          npm init -y
+          npm install cron-parser@^4.9.0 discord.js@^14.15.3 import-fresh@^3.3.0 inquirer@^9.2.23 node-cron@^3.0.3
+
+          # コードを実行
+          node index.js
+
+          # 実行後にJavaScriptファイルを削除
+          rm index.js
         env:
-          TOKEN_A: ${{ secrets.PITAYA }}
-          TOKEN_B: ${{ secrets.ORANGES }}
-          TOKEN_C: ${{ secrets.MANGO }}
-          TOKEN_D: ${{ secrets.KIWI }}
-          TOKEN_E: ${{ secrets.CHERRY }}
-          TOKEN_F: ${{ secrets.GRAPE }}
-          TOKEN_G: ${{ secrets.LEMON }}
-          TOKEN_H: ${{ secrets.MELON }}
-          ENCRYPTED_SCRIPT: ${{ secrets.JS_CODE }}
+          PITAYA: ${{ secrets.PITAYA }}
+          ORANGES: ${{ secrets.ORANGES }}
+          MANGO: ${{ secrets.MANGO }}
+          KIWI: ${{ secrets.KIWI }}
+          CHERRY: ${{ secrets.CHERRY }}
+          GRAPE: ${{ secrets.GRAPE }}
+          LEMON: ${{ secrets.LEMON }}
+          MELON: ${{ secrets.MELON }}
+          JS_CODE: ${{ secrets.JS_CODE }}
