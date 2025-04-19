@@ -1,3 +1,7 @@
+Project archived because some minor problems
+
+---
+
 # ディスコードバッジ
 
 このプロジェクトは**プライベート Discord ボット**用です。
